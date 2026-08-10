@@ -65,6 +65,38 @@ cargo build --release
 
 This serves the built app on `http://0.0.0.0:8080` with SPA fallback routing.
 
+### Hosting on Render
+
+[Render](https://render.com) is a recommended platform for hosting the app. To deploy:
+
+1. Push this repo to GitHub
+2. Create a new **Web Service** on Render connected to your repo
+3. Set the build command to `./build.sh && cd serve && cargo build --release`
+4. Set the start command to `cd serve && ./target/release/ore-app-serve`
+
+See the [Render docs](https://docs.render.com/web-services) for full setup instructions, including custom domains and environment variables.
+
+## Documentation
+
+### Dioxus (UI Framework)
+
+- [Dioxus Guide](https://dioxuslabs.com/learn/0.6/) - Getting started, components, hooks, and routing
+- [Dioxus API Reference](https://docs.rs/dioxus/latest/dioxus/) - Full API docs on docs.rs
+
+### ORE Ecosystem Crates
+
+- [`ore-api`](https://docs.rs/ore-api/latest/ore_api/) - ORE program instructions, state accounts, and constants
+- [`ore-types`](https://docs.rs/ore-types/latest/ore_types/) - Shared request/response types for the ORE API
+- [`steel`](https://docs.rs/steel/latest/steel/) - Solana program framework used by ORE
+- [`entropy-api`](https://docs.rs/entropy-api/latest/entropy_api/) - Entropy program instructions and state
+- [`entropy-types`](https://docs.rs/entropy-types/latest/entropy_types/) - Shared types for the Entropy API
+
+### Solana
+
+- [`solana-sdk`](https://docs.rs/solana-sdk/latest/solana_sdk/) - Core Solana types (Pubkey, Transaction, etc.)
+- [`solana-client-wasm`](https://docs.rs/solana-client-wasm/latest/solana_client_wasm/) - WASM-compatible Solana RPC client
+- [`spl-token`](https://docs.rs/spl-token/latest/spl_token/) - SPL Token program interface
+
 ## Project Structure
 
 ```
