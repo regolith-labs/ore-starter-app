@@ -5,6 +5,7 @@ use futures::{
 };
 use solana_sdk::pubkey::Pubkey;
 use std::collections::HashMap;
+use std::sync::atomic::{AtomicU32, Ordering};
 
 use crate::gateway::{
     AccountNotificationParams, AccountSubscribe, AccountSubscribeGateway, GatewayError,
@@ -28,7 +29,20 @@ pub enum ToWssMsg {
     Reconnect,
 }
 pub type SubId = u64;
-pub type SubRequestId = u64;
+pub type SubRequestId = u32;
+
+// JSON-RPC IDs pass through browser and provider JavaScript, where arbitrary u64 values
+// lose precision. A process-wide u32 counter stays exactly representable and unique.
+static NEXT_SUB_REQUEST_ID: AtomicU32 = AtomicU32::new(1);
+
+pub(super) fn next_sub_request_id() -> SubRequestId {
+    loop {
+        let request_id = NEXT_SUB_REQUEST_ID.fetch_add(1, Ordering::Relaxed);
+        if request_id != 0 {
+            return request_id;
+        }
+    }
+}
 
 /// Two way channel backed by a WebSocket
 /// for subscribing to notifications from the RPC server.
@@ -300,4 +314,15 @@ enum WssCommand {
     Subscribe(SubRequestId, Pubkey, Sender<SubId>),
     Unsubscribe(SubId),
     Reconnect,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::SubRequestId;
+
+    #[test]
+    fn subscription_request_ids_fit_json_number_precision() {
+        const MAX_SAFE_INTEGER: u64 = (1u64 << 53) - 1;
+        assert!((SubRequestId::MAX as u64) <= MAX_SAFE_INTEGER);
+    }
 }

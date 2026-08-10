@@ -13,7 +13,7 @@ use std::fmt::Debug;
 #[derive(Debug, Serialize, Deserialize)]
 pub(super) struct JsonRpcRequest<T> {
     pub jsonrpc: String,
-    pub id: u64,
+    pub id: u32,
     pub method: String,
     pub params: T,
 }
@@ -21,7 +21,7 @@ pub(super) struct JsonRpcRequest<T> {
 #[derive(Debug, Serialize, Deserialize)]
 pub(super) struct JsonRpcResponse<T> {
     pub jsonrpc: String,
-    pub id: u64,
+    pub id: u32,
     pub result: T,
 }
 
@@ -35,7 +35,7 @@ pub(super) struct JsonRpcError {
 #[derive(Debug, Serialize, Deserialize)]
 pub(super) struct JsonRpcResponseWithError<T> {
     pub jsonrpc: String,
-    pub id: u64,
+    pub id: u32,
     pub result: Option<T>,
     pub error: Option<JsonRpcError>,
 }
@@ -63,8 +63,10 @@ pub struct AccountNotification {
     pub executable: bool,
     pub lamports: u64,
     pub owner: String,
+    // Some RPC gateways pass u64::MAX through JavaScript and round it beyond Rust's u64 range.
+    // This metadata is not used by account subscribers, so preserve its wire value as JSON.
     #[serde(rename = "rentEpoch")]
-    pub rent_epoch: u64,
+    pub rent_epoch: serde_json::Value,
     pub space: Option<u64>,
 }
 
@@ -99,7 +101,7 @@ pub trait AccountSubscribe: Sized {
     async fn subscribe(
         &mut self,
         account: &str,
-        request_id: u64,
+        request_id: u32,
     ) -> Result<Self::SubscriptionId, SubscriptionError>;
     async fn unsubscribe(
         &mut self,
@@ -129,3 +131,33 @@ impl std::fmt::Display for SubscriptionError {
 }
 
 impl std::error::Error for SubscriptionError {}
+
+#[cfg(test)]
+mod tests {
+    use super::AccountNotificationEnvelope;
+
+    #[test]
+    fn parses_javascript_rounded_rent_epoch_notifications() {
+        let payload = r#"{
+            "jsonrpc":"2.0",
+            "method":"accountNotification",
+            "params":{
+                "result":{
+                    "context":{"slot":438461458},
+                    "value":{
+                        "data":["","base64"],
+                        "executable":false,
+                        "lamports":1169280,
+                        "owner":"Sysvar1111111111111111111111111111111111111",
+                        "rentEpoch":18446744073709552000,
+                        "space":40
+                    }
+                },
+                "subscription":574975
+            }
+        }"#;
+
+        let notification = serde_json::from_str::<AccountNotificationEnvelope>(payload).unwrap();
+        assert_eq!(notification.params.subscription, 574975);
+    }
+}

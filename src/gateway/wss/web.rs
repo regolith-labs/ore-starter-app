@@ -31,7 +31,7 @@ impl AccountSubscribeGateway {
 
     async fn handle_response<R: serde::de::DeserializeOwned>(
         &mut self,
-        request_id: u64,
+        request_id: u32,
     ) -> Result<R, SubscriptionError> {
         while let Some(msg) = self.reader.next().await {
             match msg {
@@ -76,7 +76,7 @@ impl AccountSubscribe for AccountSubscribeGateway {
     async fn subscribe(
         &mut self,
         account: &str,
-        request_id: u64,
+        request_id: u32,
     ) -> Result<Self::SubscriptionId, SubscriptionError> {
         let config = AccountSubscribeConfig {
             encoding: "base64".to_string(),
@@ -97,7 +97,7 @@ impl AccountSubscribe for AccountSubscribeGateway {
         &mut self,
         subscription: Self::SubscriptionId,
     ) -> Result<(), SubscriptionError> {
-        let request_id = fastrand::u64(..);
+        let request_id = fastrand::u32(..);
         let request = JsonRpcRequest {
             jsonrpc: "2.0".to_string(),
             id: request_id,
