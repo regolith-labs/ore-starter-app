@@ -7,7 +7,7 @@ use solana_sdk::pubkey::Pubkey;
 
 use crate::gateway::{GatewayError, GatewayResult};
 
-const API_URL: &str = "https://api.ore.com/jupiter/price";
+const API_URL: &str = "https://lite-api.jup.ag/price/v3";
 
 pub fn use_ore_price() -> Memo<Option<f64>> {
     let ore_quote = use_ore_quote(MINT_ADDRESS);
