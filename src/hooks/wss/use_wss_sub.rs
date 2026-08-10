@@ -4,7 +4,7 @@ use solana_sdk::pubkey::Pubkey;
 
 use crate::gateway::{AccountNotificationParams, GatewayResult};
 
-use super::{use_notif_store, use_wss, ToWssMsg};
+use super::{next_sub_request_id, use_notif_store, use_wss, ToWssMsg};
 
 /// End to end management of websocket subscriptions.
 ///
@@ -27,13 +27,13 @@ where
     let (from_wss, to_wss) = use_wss();
     let (mut notif_store, notif_version) = use_notif_store();
     let mut sub_id = use_signal(|| 0u64);
-    let mut sub_request_id = use_signal(|| 0u64);
+    let mut sub_request_id = use_signal(|| 0u32);
     let mut last_processed_version = use_signal(|| 0u64);
 
     // Subscribe when component mounts
     let pubkey_tx = use_coroutine(move |mut rx: UnboundedReceiver<Pubkey>| async move {
         while let Some(pubkey) = rx.next().await {
-            let rid = fastrand::u64(..);
+            let rid = next_sub_request_id();
             // Set sub request id
             sub_request_id.set(rid);
             // Unsubscribe from previous wallet first
