@@ -20,7 +20,10 @@ use steel::{AccountDeserialize, Discriminator};
 pub use utils::*;
 pub use wss::*;
 
-pub const DEFAULT_RPC_URL: &str = "https://api.mainnet-beta.solana.com";
+pub const DEFAULT_RPC_URL: &str = match option_env!("ORE_RPC_URL") {
+    Some(url) => url,
+    None => "https://api.mainnet-beta.solana.com",
+};
 
 pub struct Gateway<R: Rpc> {
     pub rpc: R,
