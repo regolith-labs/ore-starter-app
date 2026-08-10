@@ -6,7 +6,7 @@ use solana_sdk::{pubkey, pubkey::Pubkey};
 
 use crate::gateway::{GatewayError, GatewayResult};
 
-const API_URL: &str = "https://api.ore.com/jupiter/price";
+const API_URL: &str = "https://lite-api.jup.ag/price/v3";
 
 const SOL_ADDRESS: Pubkey = pubkey!("So11111111111111111111111111111111111111112");
 
