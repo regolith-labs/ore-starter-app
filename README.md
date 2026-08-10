@@ -15,11 +15,19 @@ Built with [Dioxus](https://dioxuslabs.com/) (Rust + WASM) and [Tailwind CSS](ht
 
 Before running, you may want to update these placeholders:
 
-| File | What | Default |
-|------|------|---------|
-| `src/gateway/mod.rs` | `DEFAULT_RPC_URL` | `https://api.mainnet-beta.solana.com` (rate-limited; swap for your own RPC) |
+| Setting | What | Default |
+|---------|------|---------|
+| `ORE_RPC_URL` environment variable | Compile-time Solana RPC URL | `https://api.mainnet-beta.solana.com` (rate-limited; swap for your own RPC) |
 | `index.html` | Open Graph meta tags | Points to `ore.com` |
 | `assets/manifest.json` | PWA manifest | ORE branding |
+
+For local development with a custom RPC:
+
+```sh
+ORE_RPC_URL=https://your-rpc.example.com dx serve --web
+```
+
+Because this is a browser app, the compiled RPC URL is visible to users. Only use credentials intended for client-side applications.
 
 ## Development
 
