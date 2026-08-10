@@ -1,0 +1,43 @@
+use solana_sdk::signature::Signature;
+
+use super::{GatewayError, GatewayResult, Rpc, TransactionConfirmationStatus};
+
+const CONFIRM_RETRIES: usize = 20;
+const CONFIRM_DELAY: u64 = 1_500;
+
+pub trait SolanaGateway {
+    async fn confirm_signature(&self, sig: Signature) -> GatewayResult<Signature>;
+}
+
+impl<R: Rpc> SolanaGateway for R {
+    async fn confirm_signature(&self, sig: Signature) -> GatewayResult<Signature> {
+        // Confirm tx
+        for retry in 0..CONFIRM_RETRIES {
+            // Delay before confirming
+            async_std::task::sleep(crate::utils::Duration::from_millis(CONFIRM_DELAY)).await;
+            // Fetch transaction status
+            match self.get_signature_statuses(&[sig]).await {
+                Ok(signature_statuses) => {
+                    for signature_status in signature_statuses {
+                        if let Some(signature_status) = signature_status.as_ref() {
+                            match signature_status {
+                                TransactionConfirmationStatus::Processed => {}
+                                TransactionConfirmationStatus::Confirmed
+                                | TransactionConfirmationStatus::Finalized => {
+                                    log::info!("Confirmed: true");
+                                    return Ok(sig);
+                                }
+                            }
+                        }
+                    }
+                }
+                // Handle confirmation errors
+                Err(err) => {
+                    log::error!("Error confirming: {:?}", err);
+                }
+            }
+            log::info!("retry: {}", retry);
+        }
+        return Err(GatewayError::TransactionTimeout);
+    }
+}

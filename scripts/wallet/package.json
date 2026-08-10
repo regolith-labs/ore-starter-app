@@ -1,0 +1,35 @@
+{
+  "name": "wallet",
+  "main": "main.js",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "npx webpack --config=./webpack.config.js --mode=development --entry ./src/main.js --output-path ./../../assets/"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
+    "@babel/preset-react": "^7.24.7",
+    "@types/react": "^19.2.7",
+    "babel-loader": "^9.1.3",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.2",
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@solana-mobile/wallet-standard-mobile": "^0.5.2",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana-program/memo": "^0.10.0",
+    "@solana-program/system": "^0.10.0",
+    "@solana-program/token": "^0.9.0",
+    "@solana/web3.js": "^1.93.0",
+    "@wallet-standard/app": "^1.1.0",
+    "bs58": "^5.0.0",
+    "crypto-browserify": "^3.12.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "stream-browserify": "^3.0.0",
+    "vm-browserify": "^1.1.2"
+  }
+}

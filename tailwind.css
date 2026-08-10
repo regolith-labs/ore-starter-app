@@ -1,0 +1,272 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-transparent: 'transparent';
+  --color-white: #F0EEE9;
+  --color-black: #090810;
+  --color-slate: #090810;
+  --color-base-bg: #090810;
+  --color-base-canvas: #090810;
+  --color-line: #2A2D2F;
+  --color-surface-hover: #131216;
+  --color-elements-highEmphasis: #F0EEE9;
+  --color-elements-midEmphasis: #CBCBD4;
+  --color-elements-lowEmphasis: #7E7E8C;
+  --color-elements-disabled: #585661;
+  --color-elements-gold: #ECC771;
+  --color-elements-purple: #5949B7;
+  --color-elements-green: #00D066;
+  --color-elements-red: #B92F19;
+  --color-elements-yellow: #C6C33E;
+  --color-elements-contrast: #090810;
+  --color-surface-elevated: #131216;
+  --color-surface-elevatedHover: #151419;
+  --color-surface-floating: #1A191F;
+  --color-surface-floatingHover: #1E1D23;
+  --color-surface-floatingControl: #29282E;
+  --color-surface-floatingControlHover: #29282E;
+  --color-controls-primary: #F5F5F5;
+  --color-controls-primaryHover: #FAFAFA;
+  --color-controls-secondary: #26242D;
+  --color-controls-secondaryHover: #2B2932;
+  --color-controls-tertiary: #1D1C22;
+  --color-controls-tertiaryHover: #222027;
+  --color-controls-danger: #CC3B28;
+  --color-controls-dangerHover: #BC3625;
+  --color-controls-disabled: #18171C;
+  --color-controls-handle: '#302E38';
+
+  /* Fonts */
+  --font-mono: 'JetBrains Mono', monospace, ui-monospace;
+  --font-serif: 'Inter', ui-serif, system-ui;
+  --font-sans: 'Inter', ui-sans-serif, system-ui;
+  --font-wide: 'Inter', ui-sans-serif, system-ui;
+  --font-extended: 'Inter', ui-sans-serif, system-ui;
+
+  /* Keyframes */
+  @keyframes wallet-drawer-fade {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes wallet-drawer-slide {
+    from {
+      transform: translateX(100%);
+    }
+
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes typing-fade {
+
+    0%,
+    100% {
+      opacity: 0.2;
+    }
+
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes gold-sheen {
+
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+}
+
+*,
+::after,
+::before {
+  touch-action: manipulation;
+}
+
+
+body {
+  @apply bg-black text-elements-highEmphasis overflow-x-hidden;
+}
+
+@layer components {
+  .gold-text {
+    background: linear-gradient(100deg,
+        #a07830 0%, #b8922e 14%, #c9a44a 28%, #ecc771 42%,
+        #fff1a8 50%,
+        #ecc771 58%, #c9a44a 72%, #b8922e 86%, #a07830 100%);
+    background-size: 280% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .gold-icon-shimmer {
+    animation: gold-icon-color 10s ease-in-out infinite;
+  }
+
+  @keyframes gold-icon-color {
+
+    0%,
+    100% {
+      color: #b8922e;
+    }
+
+    25% {
+      color: #ecc771;
+    }
+
+    50% {
+      color: #fff1a8;
+    }
+
+    75% {
+      color: #ecc771;
+    }
+  }
+
+  .wallet-drawer-fade {
+    animation: var(--animate-wallet-drawer-fade);
+  }
+
+  .wallet-drawer-slide {
+    animation: var(--animate-wallet-drawer-slide);
+  }
+
+  .scrollbar-hide {
+    scrollbar-width: none;
+    /* For Firefox */
+    -ms-overflow-style: none;
+    /* For Internet Explorer and Edge */
+  }
+
+  .loading {
+    @apply transition bg-gray-800 animate-pulse;
+  }
+
+  .elevated {
+    @apply bg-surface-elevated;
+  }
+
+  .elevated-control {
+    @apply transition bg-surface-elevated hover:bg-surface-elevatedHover;
+  }
+
+  .elevated-border-left {
+    @apply border-l border-gray-800;
+  }
+
+  .elevated-border {
+    @apply border border-gray-800;
+  }
+
+  .elevated-border-top {
+    @apply border-t border-gray-800;
+  }
+
+  .top-safe {
+    top: 0;
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .no-scroll {
+    overflow: hidden;
+  }
+
+  .controls-primary {
+    @apply flex font-semibold transition duration-300 ease-in-out bg-controls-primary text-black enabled:hover:bg-controls-primaryHover enabled:hover:cursor-pointer enabled:hover:scale-105 disabled:bg-controls-disabled disabled:text-elements-disabled;
+  }
+
+  .controls-secondary {
+    @apply flex font-semibold text-center transition duration-300 ease-in-out bg-controls-secondary text-elements-highEmphasis/50 enabled:hover:bg-controls-secondaryHover enabled:hover:cursor-pointer;
+  }
+
+  .controls-tertiary {
+    @apply flex font-semibold transition duration-300 ease-in-out bg-controls-tertiary text-elements-lowEmphasis hover:bg-controls-tertiaryHover hover:text-elements-midEmphasis hover:not-disabled:cursor-pointer;
+  }
+
+  .controls-tertiary-floating {
+    @apply flex font-semibold transition duration-300 ease-in-out bg-surface-floatingControl text-[#9D9D9D] enabled:hover:bg-surface-floatingControlHover enabled:hover:text-elements-midEmphasis enabled:hover:cursor-pointer;
+  }
+
+  .controls-gold {
+    @apply flex font-semibold transition duration-300 ease-in-out border-2 border-elements-gold text-elements-gold enabled:hover:bg-elements-gold enabled:hover:text-black enabled:hover:cursor-pointer enabled:hover:scale-105 disabled:bg-controls-disabled disabled:text-elements-disabled disabled:border-none;
+  }
+
+  .bg-elements-red {
+    background-color: var(--color-elements-red);
+  }
+
+  .bg-elements-yellow {
+    background-color: var(--color-elements-yellow);
+  }
+
+  .bg-elements-green {
+    background-color: var(--color-elements-green);
+  }
+
+  .checkbox {
+    @apply w-4 h-4 appearance-none border-2 border-elements-lowEmphasis rounded bg-transparent cursor-pointer relative;
+  }
+
+  .checkbox:checked {
+    @apply bg-elements-highEmphasis border-elements-highEmphasis;
+  }
+
+  .checkbox:checked::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 10px;
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    display: block;
+    left: 50%;
+    top: 50%;
+    margin-left: -3px;
+    margin-top: -7px;
+  }
+
+  /* Typing indicator dots animation */
+  .typing-dots {
+    display: inline-flex;
+    gap: 2px;
+  }
+
+  .typing-dot {
+    animation: typing-fade 1.4s infinite;
+  }
+
+  .typing-dot:nth-child(1) {
+    animation-delay: 0s;
+  }
+
+  .typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  .tabular-numbers {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+}
+

@@ -1,0 +1,116 @@
+[package]
+name = "ore-app"
+version = "1.2.13"
+description = "It's time to mine."
+edition = "2021"
+license = "Apache-2.0"
+homepage = "https://ore.com"
+documentation = "https://ore.com"
+repository = "https://github.com/regolith-labs/ore-app"
+readme = "./README.md"
+keywords = ["solana", "crypto", "mining"]
+
+[features]
+default = []
+
+[dependencies]
+anyhow = "1.0"
+async-channel = "2.3.1"
+bs58 = "0.4"
+bincode = "1.3.3"
+async-retry = "0.3.1"
+async-std = "1.12.0"
+async-trait = "0.1.87"
+base64 = "0.22.1"
+b64 = "0.4"
+bytemuck = "1.14.3"
+cached = { version = "0.56.0", features = ["async"] }
+chrono = { version = "0.4", features = ["wasmbind"] }
+derive-alias = "0.1.0"
+dioxus = { version = "0.7.3", features = ["router", "logger"] }
+entropy-api = "0.1.4"
+entropy-types = "0.0.1"
+fastrand = "2.3.0"
+futures = "0.3.30"
+futures-util = "0.3.30"
+gloo = "0.11.0"
+gloo-storage = "0.3.0"
+gloo-worker = "0.5.0"
+gloo-utils = "0.2.0"
+gloo-net = "0.6.0"
+is-url = "1.0.4"
+js-sys = "0.3.67"
+jupiter-swap-api-client = { git = "https://github.com/regolith-labs/jupiter-swap-api-client", package = "jupiter-swap-api-client", branch = "main" }
+lazy_static = "1.4"
+log = "0.4.20"
+mpl-token-metadata = "5.1"
+noise = "0.9"
+num-format = "0.4.4"
+ore-legacy-api = "0.1.0"
+ore-api = "3.8.20"
+ore-mint-api = "0.1.3"
+ore-lst-api = "0.3.2"
+ore-lst-api-deprecated = { package = "ore-lst-api", version = "0.2.5" }
+ore-stake-api = "0.3.0"
+ore-stake-api-deprecated = { package = "ore-stake-api", version = "0.2.5" }
+ore-types = "0.0.51"
+protobook-api = "0.1.4"
+qrcode-generator = "4.1.9"
+rand = "0.8.5"
+rust_decimal = "1"
+reqwest = { version = "0.11.24", default-features = false, features = [
+  "json",
+  "wasm-streams",
+] }
+serde = { version = "1.0", features = ["derive"] }
+serde-enum-str = "0.4.0"
+serde-wasm-bindgen = "0.6.3"
+serde_json = "1.0"
+serde_yaml = "0.9"
+solana-client-wasm = "=2.1"
+solana-extra-wasm = "=2.1"
+solana-sdk = "=2.1"
+spl-token = { version = "^4", features = ["no-entrypoint"] }
+spl-associated-token-account = { version = "^6", features = ["no-entrypoint"] }
+steel = "4.0.3"
+tracing = "0.1.40"
+url = "2.5.0"
+wasm-bindgen = "0.2.99"
+wasm-bindgen-futures = "0.4.41"
+wasm-logger = "0.2.0"
+web-time = "1.0.0"
+
+[dependencies.web-sys]
+version = "0.3"
+features = [
+  'BlobPropertyBag',
+  'console',
+  'Clipboard',
+  'Document',
+  'DomRect',
+  'Element',
+  'HtmlElement',
+  'HtmlAudioElement',
+  'HtmlInputElement',
+  "IdbFactory",
+  "IdbDatabase",
+  "IdbObjectStore",
+  "IdbTransaction",
+  'IntersectionObserver',
+  'IntersectionObserverEntry',
+  'IntersectionObserverInit',
+  'MessageEvent',
+  'Navigator',
+  'Window',
+  'Worker',
+  'WorkerOptions',
+  'WorkerType',
+  'WorkerGlobalScope',
+]
+
+[profile.release]
+strip = "debuginfo"
+
+[patch.crates-io]
+solana-client-wasm = { version = "2.1", git = "https://github.com/regolith-labs/solana-playground", branch = "master" }
+solana-extra-wasm = { version = "2.1", git = "https://github.com/regolith-labs/solana-playground", branch = "master" }

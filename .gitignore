@@ -1,0 +1,11 @@
+.DS_Store
+dioxusin
+/dist
+/node_modules
+/target
+/hasher-web/target/
+/hasher-types/target/
+/scripts/**/node_modules/
+/scripts/**/dist/
+*.br
+.claude/worktrees/

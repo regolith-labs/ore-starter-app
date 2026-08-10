@@ -1,0 +1,49 @@
+use std::{collections::HashMap, time::Duration};
+
+use dioxus::prelude::*;
+use serde::Deserialize;
+use solana_sdk::{pubkey, pubkey::Pubkey};
+
+use crate::gateway::{GatewayError, GatewayResult};
+
+const API_URL: &str = "https://api.ore.com/jupiter/price";
+
+const SOL_ADDRESS: Pubkey = pubkey!("So11111111111111111111111111111111111111112");
+
+pub fn use_sol_price() -> Memo<Option<f64>> {
+    let sol_quote = use_sol_quote(SOL_ADDRESS);
+    use_memo(move || {
+        let Ok(price) = sol_quote.cloned() else {
+            return None;
+        };
+        Some(price)
+    })
+}
+
+pub fn use_sol_quote(output_token: Pubkey) -> Signal<GatewayResult<f64>> {
+    let mut quote = use_signal(|| Err(GatewayError::Unknown));
+    let _ = use_resource(move || async move {
+        loop {
+            let client = reqwest::Client::new();
+            let url = format!("{}?ids={}", API_URL, SOL_ADDRESS.to_string());
+            if let Ok(response) = client.get(url).send().await {
+                if let Ok(json) = response.json::<PriceResponse>().await {
+                    if let Some(asset_price) = json.0.get(&output_token.to_string()) {
+                        quote.set(Ok(asset_price.usd_price));
+                    }
+                }
+            }
+            async_std::task::sleep(Duration::from_secs(60)).await;
+        }
+    });
+    quote
+}
+
+#[derive(Debug, Deserialize, Clone)]
+struct PriceResponse(HashMap<String, AssetPrice>);
+
+#[derive(Debug, Deserialize, Clone)]
+struct AssetPrice {
+    #[serde(rename = "usdPrice")]
+    usd_price: f64,
+}

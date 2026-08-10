@@ -1,0 +1,17 @@
+[application]
+name = "ore-app"
+
+[web.app]
+title = ""
+
+[web.watcher]
+reload_html = true
+watch_path = ["src", "assets"]
+index_on_404 = true
+
+[web.resource]
+style = []
+script = []
+
+[web.resource.dev]
+script = []
