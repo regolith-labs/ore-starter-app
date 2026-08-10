@@ -40,22 +40,14 @@ gloo-utils = "0.2.0"
 gloo-net = "0.6.0"
 is-url = "1.0.4"
 js-sys = "0.3.67"
-jupiter-swap-api-client = { git = "https://github.com/regolith-labs/jupiter-swap-api-client", package = "jupiter-swap-api-client", branch = "main" }
 lazy_static = "1.4"
 log = "0.4.20"
 mpl-token-metadata = "5.1"
 noise = "0.9"
 num-format = "0.4.4"
-ore-legacy-api = "0.1.0"
 ore-api = "3.8.20"
 ore-mint-api = "0.1.3"
-ore-lst-api = "0.3.2"
-ore-lst-api-deprecated = { package = "ore-lst-api", version = "0.2.5" }
-ore-stake-api = "0.3.0"
-ore-stake-api-deprecated = { package = "ore-stake-api", version = "0.2.5" }
 ore-types = "0.0.51"
-protobook-api = "0.1.4"
-qrcode-generator = "4.1.9"
 rand = "0.8.5"
 rust_decimal = "1"
 reqwest = { version = "0.11.24", default-features = false, features = [

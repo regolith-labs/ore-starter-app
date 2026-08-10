@@ -3,8 +3,6 @@ use ore_api::consts::{MINT_ADDRESS, SOL_MINT};
 use solana_sdk::pubkey;
 use steel::Pubkey;
 
-const USDC_MINT: Pubkey = pubkey!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
-
 #[derive(Clone, Debug, PartialEq)]
 pub struct ListedToken {
     pub mint: Pubkey,
@@ -33,14 +31,4 @@ impl ListedToken {
             icon: asset!("/assets/solana.png"),
         }
     }
-    pub fn usdc() -> Self {
-        Self {
-            mint: USDC_MINT,
-            name: "USDC".to_string(),
-            symbol: "USDC".to_string(),
-            decimals: 6,
-            icon: asset!("/assets/usdc.png"),
-        }
-    }
-
 }

@@ -60,9 +60,6 @@ pub trait OreGateway {
     async fn get_board(&self) -> GatewayResult<Board>;
     async fn get_config(&self) -> GatewayResult<Config>;
     async fn get_treasury(&self) -> GatewayResult<Treasury>;
-    async fn get_stake(&self, address: Pubkey) -> GatewayResult<ore_stake_api::prelude::Stake>;
-    async fn get_stake_treasury(&self) -> GatewayResult<ore_stake_api::prelude::Treasury>;
-    async fn get_stake_vesting(&self) -> GatewayResult<ore_stake_api::state::Vesting>;
     async fn get_miner(&self, address: Pubkey) -> GatewayResult<Miner>;
     async fn get_miners(&self, pubkeys: &[Pubkey]) -> GatewayResult<Vec<Miner>>;
     async fn get_slothash(&self, slot: u64) -> GatewayResult<[u8; 32]>;
@@ -157,26 +154,6 @@ impl<R: Rpc> OreGateway for R {
         let account_data = self.get_account_data(&treasury_address).await?;
         let treasury = Treasury::try_from_bytes(&account_data)?;
         Ok(*treasury)
-    }
-
-    async fn get_stake(&self, address: Pubkey) -> GatewayResult<ore_stake_api::prelude::Stake> {
-        let account_data = self.get_account_data(&address).await?;
-        let stake = ore_stake_api::prelude::Stake::try_from_bytes(&account_data)?;
-        Ok(*stake)
-    }
-
-    async fn get_stake_treasury(&self) -> GatewayResult<ore_stake_api::prelude::Treasury> {
-        let treasury_address = ore_stake_api::state::treasury_pda().0;
-        let account_data = self.get_account_data(&treasury_address).await?;
-        let treasury = ore_stake_api::prelude::Treasury::try_from_bytes(&account_data)?;
-        Ok(*treasury)
-    }
-
-    async fn get_stake_vesting(&self) -> GatewayResult<ore_stake_api::state::Vesting> {
-        let vesting_address = ore_stake_api::state::vesting_pda().0;
-        let account_data = self.get_account_data(&vesting_address).await?;
-        let vesting = ore_stake_api::state::Vesting::try_from_bytes(&account_data)?;
-        Ok(*vesting)
     }
 
     async fn get_miner(&self, address: Pubkey) -> GatewayResult<Miner> {

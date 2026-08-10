@@ -88,13 +88,6 @@ impl From<std::num::ParseFloatError> for GatewayError {
     }
 }
 
-impl From<jupiter_swap_api_client::ClientError> for GatewayError {
-    fn from(value: jupiter_swap_api_client::ClientError) -> Self {
-        log::error!("{:?}", value);
-        GatewayError::JupSwapError
-    }
-}
-
 impl From<reqwest::Error> for GatewayError {
     fn from(value: reqwest::Error) -> Self {
         log::error!("{:?}", value);
