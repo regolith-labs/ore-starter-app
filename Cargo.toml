@@ -106,3 +106,7 @@ strip = "debuginfo"
 [patch.crates-io]
 solana-client-wasm = { version = "2.1", git = "https://github.com/regolith-labs/solana-playground", branch = "master" }
 solana-extra-wasm = { version = "2.1", git = "https://github.com/regolith-labs/solana-playground", branch = "master" }
+
+[workspace]
+exclude = ["serve"]
+resolver = "2"

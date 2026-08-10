@@ -36,7 +36,6 @@ cp assets/vendor/spl-memo.global.js target/dx/ore-app/release/web/public/assets
 cp assets/vendor/spl-system.global.js target/dx/ore-app/release/web/public/assets
 cp assets/vendor/spl-token.global.js target/dx/ore-app/release/web/public/assets
 cp assets/wallet.js target/dx/ore-app/release/web/public/assets
-cp assets/market-chart.js target/dx/ore-app/release/web/public/assets
 
 # Copy brand assets.
 mkdir -p target/dx/ore-app/release/web/public/assets/brand
