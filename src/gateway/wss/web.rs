@@ -2,7 +2,7 @@ use async_trait::async_trait;
 use futures_util::{SinkExt, StreamExt};
 use gloo_net::websocket::futures::WebSocket;
 use gloo_net::websocket::Message as GlooMessage;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_json;
 
 use super::{
@@ -14,6 +14,27 @@ use super::{
 pub struct AccountSubscribeGateway {
     writer: futures_util::stream::SplitSink<WebSocket, GlooMessage>,
     reader: futures_util::stream::SplitStream<WebSocket>,
+}
+
+#[derive(Deserialize)]
+struct SubscriptionErrorEnvelope {
+    params: SubscriptionErrorParams,
+}
+
+#[derive(Deserialize)]
+struct SubscriptionErrorParams {
+    error: SubscriptionErrorBody,
+}
+
+#[derive(Deserialize)]
+struct SubscriptionErrorBody {
+    message: String,
+}
+
+fn parse_subscription_error(text: &str) -> Option<String> {
+    serde_json::from_str::<SubscriptionErrorEnvelope>(text)
+        .ok()
+        .map(|envelope| envelope.params.error.message)
 }
 
 impl AccountSubscribeGateway {
@@ -132,6 +153,9 @@ impl AccountSubscribe for AccountSubscribeGateway {
                             }
                         }
                         Err(e) => {
+                            if let Some(message) = parse_subscription_error(&text) {
+                                return Err(SubscriptionError::RpcError(message));
+                            }
                             log::error!("Failed to parse notification: {}, text: {}", e, text);
                             continue;
                         }
@@ -147,5 +171,33 @@ impl AccountSubscribe for AccountSubscribeGateway {
         Err(SubscriptionError::Other(
             "WebSocket stream ended".to_string(),
         ))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::parse_subscription_error;
+
+    #[test]
+    fn parses_provider_subscription_timeout() {
+        let payload = r#"{
+            "jsonrpc":"2.0",
+            "method":"eth_subscription",
+            "params":{
+                "error":{"code":-32000,"message":"Subscription timed out"},
+                "subscription":238755
+            },
+            "id":9
+        }"#;
+
+        assert_eq!(
+            parse_subscription_error(payload).as_deref(),
+            Some("Subscription timed out")
+        );
+    }
+
+    #[test]
+    fn ignores_unrelated_messages() {
+        assert_eq!(parse_subscription_error(r#"{"jsonrpc":"2.0"}"#), None);
     }
 }
