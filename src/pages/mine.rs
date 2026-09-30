@@ -962,7 +962,9 @@ fn TimeRemaining(
             return None;
         }
         let slots_remaining = board.end_slot.saturating_sub(clock.slot);
-        let secs_remaining = (slots_remaining as f64 * 0.4) as u64;
+        // Rounds are 240 slots at ~250ms, so one minute is 0.25s per slot.
+        // 0.4s/slot was the old 400ms slot time and runs about 1.6x long.
+        let secs_remaining = (slots_remaining as f64 * 0.25) as u64;
         let minutes = secs_remaining / 60;
         let seconds = secs_remaining % 60;
         Some((minutes, seconds))
